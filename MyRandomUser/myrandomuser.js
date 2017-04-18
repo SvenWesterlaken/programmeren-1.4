@@ -2,7 +2,8 @@
  * Created by Sven on 18-4-2017.
  */
 var express = require("express"),
-    app = express();
+    app = express(),
+    port = process.env.PORT || 3000;
 
 app.get('/', function(request, response){
     response.send('Hello Avans!');
@@ -25,6 +26,6 @@ app.all('*', function(request, response) {
     response.send('404 - Not Found');
 })
 
-app.listen(3000, function() {
-    console.log('Server app is listening on port 3000');
+app.listen(port, function() {
+  console.log('Server app is listening on port ' + port);
 })
