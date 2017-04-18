@@ -1,0 +1,19 @@
+{
+  "name": "programmeren-4",
+  "version": "1.0.0",
+  "description": "Programmeren 4 practicums",
+  "main": "MyRandomUser/myrandomuser.js",
+  "scripts": {
+	"start": "node ./MyRandomUser/myrandomuser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SvenWesterlaken/programmeren-1.4.git"
+  },
+  "author": "Sven Westerlaken",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SvenWesterlaken/programmeren-1.4/issues"
+  },
+  "homepage": "https://github.com/SvenWesterlaken/programmeren-1.4#readme"
+}
