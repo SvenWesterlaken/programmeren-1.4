@@ -3,6 +3,7 @@
  */
 var express = require("express"),
     app = express(),
+    users = require('./users'),
     port = process.env.PORT || 3000;
 
 app.get('/', function(request, response){
@@ -43,6 +44,10 @@ app.get('/json', function(request, response) {
         "twee", "drie", "vijf", "zeven"
       ]
     })
+})
+
+app.get('/api' function(request, response) {
+  response.json(users.getUsers());
 })
 
 app.all('*', function(request, response) {
