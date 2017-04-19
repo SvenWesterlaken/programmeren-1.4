@@ -1,5 +1,5 @@
 function getUsers() {
-  {
+  return({
     "results": [
       {
         "gender": "female",
@@ -353,7 +353,7 @@ function getUsers() {
       "page": 1,
       "version": "1.1"
     }
-  }
+  })
 }
 
 module.exports = { getUsers };
