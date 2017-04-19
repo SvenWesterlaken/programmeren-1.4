@@ -21,11 +21,6 @@ app.put('/', function(request, response) {
     response.send('Hello Avans, PUT request recieved');
 })
 
-app.all('*', function(request, response) {
-    response.status(404);
-    response.send('404 - Not Found');
-})
-
 app.get('/json', function(request, response) {
   response.json(
     {
@@ -50,7 +45,10 @@ app.get('/json', function(request, response) {
     })
 })
 
-
+app.all('*', function(request, response) {
+    response.status(404);
+    response.send('404 - Not Found');
+})
 
 app.listen(port, function() {
   console.log('Server app is listening on port ' + port);
