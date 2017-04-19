@@ -47,7 +47,7 @@ app.get('/json', function(request, response) {
 })
 
 app.get('/api' function(request, response) {
-  response.json(JSON.stringify(person.i18l('nl')));
+  response.json(JSON.stringify(users.getUsers()));
 })
 
 app.all('*', function(request, response) {
