@@ -1,0 +1,7 @@
+{
+  "webPort": "8080",
+  "dbServer": "localhost",
+  "dbUsername": "root",
+  "dbPassword": "",
+  "dbSchema": "world"
+}
