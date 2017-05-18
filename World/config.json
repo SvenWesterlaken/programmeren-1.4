@@ -3,5 +3,7 @@
   "dbServer": "localhost",
   "dbUsername": "root",
   "dbPassword": "",
-  "dbSchema": "world"
+  "dbSchema": "world",
+  "dbUserSchema": "userdetails",
+  "secretkey":  "SecretKeyForWorldDatabase-210984756347-"
 }
