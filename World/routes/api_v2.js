@@ -3,9 +3,10 @@ var express = require('express'),
     path = require('path'),
     pool = require('../database/db'),
     auth =  require('../auth/auth'),
+    bcrypt = require('bcrypt'),
     pool_user = require('../database/db_user');
 
-router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
+router.all( new RegExp("[^(\/login)|(\/register)]"), function (req, res, next) {
     console.log("VALIDATE TOKEN")
     var token = (req.header('W-Access-Token')) || '';
     auth.decodeToken(token, function (err, payload) {
@@ -18,12 +19,13 @@ router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
     });
 });
 
-router.post('/login', function(req, res) {
+router.post('/register', function(req, res) {
+  const saltRounds = 10;
   var username = req.body.username || '';
   var password = req.body.password || '';
 
   if (username != null && password != null) {
-    query = 'SELECT * FROM user WHERE username = "' + username + '" AND password = "' + password + '";';
+    query = 'SELECT * FROM user WHERE username = "' + username + '";';
 
     pool_user.getConnection( function(error, connection) {
       if (error) { throw error }
@@ -32,11 +34,62 @@ router.post('/login', function(req, res) {
         if(error) {
           throw error
         }
-        console.log("result: " +  rows[0]);
 
         // Generate JWT
         if( rows[0] ) {
-            res.status(200).json({"token" : auth.encodeToken(username), "username" : username});
+            res.status(401).json({"error" : "User already exists."});
+        } else {
+
+          password = bcrypt.hashSync(password, saltRounds);
+
+            query_add = 'INSERT INTO `user` (username, password) VALUES ("' + username + '", "' + password + '")'
+
+            pool_user.getConnection( function(error, connection) {
+              if (error) { throw error }
+              connection.query(query_add, function(error, rows, fields) {
+                connection.release();
+
+                if(error) {
+                  res.status(401).json({"error":"User has not been added"})
+                  throw error
+                }
+
+                res.status(200).end(JSON.stringify(rows));
+
+              });
+            });
+        }
+      });
+    });
+
+  } else {
+    res.status(404).json({"Message" : "No register credentials in the body."});
+  }
+
+
+});
+
+router.post('/login', function(req, res) {
+  var username = req.body.username || '';
+  var password = req.body.password || '';
+
+  if (username != null && password != null) {
+    query = 'SELECT * FROM user WHERE username = "' + username + '";';
+
+    pool_user.getConnection( function(error, connection) {
+      if (error) { throw error }
+      connection.query(query, function (error, rows, fields) {
+        connection.release();
+        if(error) {
+          throw error
+        }
+
+        if( rows[0] ) {
+            var response = JSON.parse(JSON.stringify(rows[0]));
+            console.log(response);
+            if(bcrypt.compareSync(password, response['password'])) {
+              res.status(200).json({"token" : auth.encodeToken(username), "username" : username});
+            }
         } else {
             res.status(401).json({"error":"Invalid credentials"})
         }
@@ -44,7 +97,7 @@ router.post('/login', function(req, res) {
     });
 
   } else {
-    res.status(404).json({"Message" : "No login credentials in the body :("});
+    res.status(404).json({"Message" : "No login credentials in the body."});
   }
 
 });
